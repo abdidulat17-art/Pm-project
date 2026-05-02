@@ -21,7 +21,7 @@ This system provides a backend API for:
 - Security with RBAC (ADMIN/USER)
 - Audit logging for critical actions
 - Event-driven simulation (async-like event published on key actions)
-- Design of our project: https://www.figma.com/design/hIg3bT6d20eefIFTgZkrBD/UI-UX-design?node-id=11-67&t=X0sdaiVAgeFADoGe-0
+- Design of our project: (https://www.figma.com/design/d1Tu5Mi4omSWgj7SF2TNSP/Untitled?node-id=0-1&t=A3GELqpnEdywC3c6-1)
 ---
 
 ## Tech Stack
