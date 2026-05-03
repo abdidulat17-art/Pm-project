@@ -113,52 +113,6 @@ The final system will include:
 
 # Technical Documentation
 
-## Project Structure
-
-```text
-senim-v8/
-├── backend/
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/
-│   │       │   └── com/
-│   │       │       └── senim/
-│   │       │           └── furniture/
-│   │       │               ├── BackendApplication.java
-│   │       │               ├── config/
-│   │       │               │   └── CorsConfig.java
-│   │       │               ├── controller/
-│   │       │               │   ├── ProductController.java
-│   │       │               │   ├── CategoryController.java
-│   │       │               │   └── ContactController.java
-│   │       │               ├── entity/
-│   │       │               │   ├── Product.java
-│   │       │               │   ├── Category.java
-│   │       │               │   └── ContactMessage.java
-│   │       │               ├── repository/
-│   │       │               │   ├── ProductRepository.java
-│   │       │               │   ├── CategoryRepository.java
-│   │       │               │   └── ContactMessageRepository.java
-│   │       │               ├── service/
-│   │       │               │   ├── ProductService.java
-│   │       │               │   ├── CategoryService.java
-│   │       │               │   └── ContactService.java
-│   │       │               └── loader/
-│   │       │                   └── DataLoader.java
-│   │       └── resources/
-│   │           └── application.properties
-│   ├── pom.xml
-│   └── README.md
-│
-└── frontend/
-    ├── index.html
-    ├── css/
-    ├── js/
-    └── assets/
-```
-
----
-
 ## Backend Overview
 
 The backend is a REST API service for the Senim Furniture frontend.
@@ -260,30 +214,6 @@ or on the port configured in `application.properties`.
 | GET | `/api/contact/unread` | Get unread messages |
 | PATCH | `/api/contact/{id}/read` | Mark message as read |
 | DELETE | `/api/contact/{id}` | Delete a message |
-
----
-
-## Example Requests
-
-### Get all products
-
-```bash
-curl http://localhost:8080/api/products
-```
-
-### Get products by category
-
-```bash
-curl http://localhost:8080/api/products/category/Sofas
-```
-
-### Submit contact form
-
-```bash
-curl -X POST http://localhost:8080/api/contact \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Amir","email":"amir@example.com","message":"I am interested in the Oak Dining Table."}'
-```
 
 ---
 
