@@ -181,3 +181,10 @@ Tables are created automatically by Hibernate (`ddl-auto=update`).
 | `products`         | id, name, description, price, image_url, color, material, stock, category, featured |
 | `categories`       | id, name, description, image_url                                  |
 | `contact_messages` | id, name, email, phone, subject, message, created_at, read        |
+
+
+## Team Members
+
+- Abdimurat Dulat — PM
+- Narbayev Danial — Frontend
+- Kadyrov Dias — Backend
