@@ -6,7 +6,8 @@
 (function () {
 
   // ─── CONFIG — only change this if your backend URL is different ───────────
-  const BACKEND_URL = 'http://localhost:8081';
+  // const BACKEND_URL = 'http://localhost:8081';
+   const BACKEND_URL = 'https://senim-backend-production-eb64.up.railway.app';
   // ─────────────────────────────────────────────────────────────────────────
 
   const QUICK_REPLIES = [
