@@ -3,8 +3,8 @@
    Version 2.0 — with Auth
    =========================== */
 
-const API_BASE = 'http://localhost:8081/api';
-
+// const API_BASE = 'http://localhost:8081/api';
+const API_BASE = 'https://senim-backend-production-eb64.up.railway.app/api';
 // ===========================
 // AUTH MANAGEMENT
 // ===========================
