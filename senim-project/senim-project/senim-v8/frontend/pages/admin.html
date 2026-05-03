@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel – Senim Furniture</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* ══════════════════════════════════════
+       ADMIN LAYOUT — fixed sidebar + scroll
+       ══════════════════════════════════════ */
+    * { box-sizing: border-box; }
+
+    body { margin: 0; overflow-x: hidden; }
+
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      height: 64px;
+    }
+
+    .admin-wrapper {
+      display: flex;
+      min-height: 100vh;
+      padding-top: 64px;
+    }
+
+    /* Sidebar */
+    .admin-sidebar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 220px;
+      height: calc(100vh - 64px);
+      background: var(--green);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 0 0;
+      overflow-y: auto;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .admin-logo {
+      padding: 0 20px 24px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      margin-bottom: 12px;
+    }
+    .admin-logo span {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: white;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 0 10px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 6px;
+      color: rgba(255,255,255,.65);
+      font-size: .86rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+      transition: background .2s, color .2s;
+      font-family: var(--font-body);
+    }
+    .sidebar-link:hover,
+    .sidebar-link.active {
+      background: rgba(255,255,255,.15);
+      color: white;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 16px 12px 20px;
+    }
+    .sidebar-footer-inner {
+      padding: 14px;
+      background: rgba(255,255,255,.08);
+      border-radius: 8px;
+      font-size: .76rem;
+      color: rgba(255,255,255,.55);
+    }
+    .sidebar-footer-inner strong {
+      display: block;
+      color: white;
+      font-size: .82rem;
+      margin-bottom: 2px;
+    }
+
+    /* Main content */
+    .admin-main {
+      margin-left: 220px;
+      flex: 1;
+      min-width: 0;
+      padding: 36px 40px;
+      background: var(--beige);
+      min-height: calc(100vh - 64px);
+    }
+
+    /* ── Header ── */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .admin-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 300;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    /* ── Stats grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    .stat-card {
+      background: var(--white);
+      padding: 18px 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+    .stat-card-label {
+      font-size: .68rem;
+      color: var(--gray);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .stat-card-value {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    /* ── Search bar row ── */
+    .search-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+    .search-wrap {
+      flex: 1;
+      position: relative;
+      min-width: 0;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      pointer-events: none;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 10px 14px 10px 40px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 6px;
+      background: var(--white);
+      font-family: var(--font-body);
+      font-size: .88rem;
+      color: var(--dark);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-wrap input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45,80,22,.1);
+    }
+    .search-row select {
+      padding: 10px 14px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 6px;
+      background: var(--white);
+      font-family: var(--font-body);
+      font-size: .88rem;
+      color: var(--dark);
+      cursor: pointer;
+      outline: none;
+      transition: border-color .2s;
+      white-space: nowrap;
+    }
+    .search-row select:focus { border-color: var(--green); }
+
+    /* ── Products table ── */
+    .table-wrap {
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      overflow: hidden;
+      width: 100%;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .admin-table th {
+      padding: 13px 18px;
+      text-align: left;
+      font-size: .68rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gray);
+      font-weight: 500;
+      background: var(--beige);
+      border-bottom: 1px solid var(--beige-dark);
+      font-family: var(--font-body);
+    }
+    .admin-table td {
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--beige-dark);
+      font-size: .87rem;
+      vertical-align: middle;
+      font-family: var(--font-body);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .admin-table tr:last-child td { border-bottom: none; }
+    .admin-table tr:hover td { background: #faf8f4; }
+
+    /* Column widths */
+    .admin-table th:nth-child(1),
+    .admin-table td:nth-child(1) { width: 72px; }
+    .admin-table th:nth-child(3),
+    .admin-table td:nth-child(3) { width: 110px; }
+    .admin-table th:nth-child(4),
+    .admin-table td:nth-child(4) { width: 130px; }
+    .admin-table th:nth-child(5),
+    .admin-table td:nth-child(5) { width: 80px; }
+    .admin-table th:nth-child(6),
+    .admin-table td:nth-child(6) { width: 100px; }
+
+    .admin-table td img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: var(--beige-dark);
+      display: block;
+    }
+
+    /* ── Action buttons ── */
+    .tbl-actions { display: flex; gap: 6px; align-items: center; }
+
+    .action-btn {
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background .18s, color .18s, transform .15s;
+      flex-shrink: 0;
+    }
+    .action-btn:hover { transform: scale(1.08); }
+
+    .btn-edit {
+      background: #e8f0e0;
+      color: var(--green);
+    }
+    .btn-edit:hover { background: var(--green); color: white; }
+
+    .btn-delete {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    .btn-delete:hover { background: #dc2626; color: white; }
+
+    /* ── Tag ── */
+    .cat-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: .7rem;
+      font-weight: 500;
+      background: rgba(45,80,22,.1);
+      color: var(--green);
+      letter-spacing: .3px;
+    }
+
+    /* ── Stock colours ── */
+    .stock-ok    { color: var(--green);    font-weight: 600; }
+    .stock-low   { color: #b45309;         font-weight: 600; }
+    .stock-none  { color: #dc2626;         font-weight: 600; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.48);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .25s, visibility .25s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 36px;
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(18px);
+      transition: transform .25s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 26px;
+    }
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 300;
+      margin: 0;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--gray);
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background .15s;
+    }
+    .modal-close:hover { background: var(--beige-dark); color: var(--dark); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-full  { grid-column: 1 / -1; }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label {
+      font-size: .73rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--dark);
+      font-family: var(--font-body);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 10px 13px;
+      border: 1.5px solid var(--gray-light);
+      border-radius: 6px;
+      background: var(--beige);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      color: var(--dark);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(45,80,22,.1);
+      background: var(--white);
+    }
+    .form-group textarea { min-height: 88px; resize: vertical; }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 22px; }
+    .modal-actions .btn { flex: 1; justify-content: center; }
+
+    /* Delete modal specific */
+    .delete-icon-wrap {
+      width: 52px; height: 52px;
+      background: #fee2e2;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Toast ── */
+    .toast-container {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      z-index: 9000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* ── Empty / loading states ── */
+    .state-cell {
+      text-align: center;
+      padding: 52px 20px;
+      color: var(--gray);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 960px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .admin-sidebar { display: none; }
+      .admin-main { margin-left: 0; padding: 20px 16px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .search-row { flex-wrap: wrap; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── Admin Login Gate ───────────────────────── */
+    .admin-gate {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .admin-gate.hidden { display: none; }
+    .admin-gate-card {
+      background: white;
+      border-radius: 16px;
+      padding: 44px 40px 36px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 8px 48px rgba(0,0,0,.18);
+      text-align: center;
+    }
+    .admin-gate-logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+    .admin-gate-sub {
+      font-size: .82rem;
+      color: var(--gray);
+      margin-bottom: 28px;
+    }
+    .admin-gate-card .form-group {
+      text-align: left;
+      margin-bottom: 16px;
+    }
+    .admin-gate-card label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .admin-gate-card input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--beige-dark);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      background: var(--beige);
+      box-sizing: border-box;
+      transition: border-color .2s;
+    }
+    .admin-gate-card input:focus {
+      outline: none;
+      border-color: var(--green);
+      background: white;
+    }
+    .admin-gate-error {
+      background: #fee2e2;
+      color: #dc2626;
+      padding: 9px 14px;
+      border-radius: var(--radius);
+      font-size: .83rem;
+      margin-bottom: 14px;
+      display: none;
+    }
+    .admin-gate-error.show { display: block; }
+    .admin-gate-btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 4px;
+      padding: 12px;
+      font-size: .92rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ ADMIN LOGIN GATE ══ -->
+<div class="admin-gate" id="adminGate">
+  <div class="admin-gate-card">
+    <div class="admin-gate-logo">Senim</div>
+    <p class="admin-gate-sub">Admin access only</p>
+    <div class="admin-gate-error" id="gateError">Incorrect email or password.</div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="gateEmail" placeholder="admin@senim.kz" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="gatePassword" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary admin-gate-btn" onclick="adminLogin()" id="gateBtn">
+      Enter Admin Panel
+    </button>
+  </div>
+</div>
+
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">Senim</a>
+  <div class="nav-actions" style="margin-left:auto">
+    <a href="../index.html" class="btn btn-outline" style="padding:8px 18px;font-size:.8rem">← Back to Site</a>
+  </div>
+</nav>
+
+<div class="admin-wrapper">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="admin-sidebar">
+    <div class="admin-logo"><span>Admin Panel</span></div>
+    <nav class="sidebar-nav">
+      <button class="sidebar-link active" onclick="showTab('products')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        Products
+      </button>
+      <button class="sidebar-link" onclick="showTab('messages')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Messages
+      </button>
+      <button class="sidebar-link" onclick="showTab('categories')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Categories
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-inner">
+        <strong>Admin Mode</strong>
+        Senim Furniture v2.0
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="admin-main">
+
+    <!-- ════ PRODUCTS TAB ════ -->
+    <div id="tab-products">
+
+      <div class="admin-header">
+        <h1 class="admin-title">Products</h1>
+        <button class="btn btn-primary" onclick="openAddModal()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Product
+        </button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card" style="border-left:3px solid var(--green)">
+          <div class="stat-card-label">Total Products</div>
+          <div class="stat-card-value" style="color:var(--green)" id="stat-total">—</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid #c8a96e">
+          <div class="stat-card-label">In Stock</div>
+          <div class="stat-card-value" style="color:#8b6914" id="stat-instock">—</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid #fc8181">
+          <div class="stat-card-label">Out of Stock</div>
+          <div class="stat-card-value" style="color:#dc2626" id="stat-outofstock">—</div>
+        </div>
+        <div class="stat-card" style="border-left:3px solid #63b3ed">
+          <div class="stat-card-label">Categories</div>
+          <div class="stat-card-value" style="color:#2b6cb0" id="stat-cats">—</div>
+        </div>
+      </div>
+
+      <!-- Search row -->
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" id="adminSearch" placeholder="Search products…" oninput="filterProducts()">
+        </div>
+        <select id="adminCatFilter" onchange="filterProducts()">
+          <option value="">All Categories</option>
+          <option>Sofas</option><option>Armchairs</option><option>Chairs</option>
+          <option>Tables</option><option>Curtains</option><option>Pillows</option>
+          <option>Accessories</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="6" class="state-cell">
+              <div class="spinner" style="margin:0 auto 10px"></div>
+              Loading products…
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /tab-products -->
+
+    <!-- ════ MESSAGES TAB ════ -->
+    <div id="tab-messages" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">Contact Messages</h1>
+        <button class="btn btn-outline" onclick="loadMessages()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23,4 23,11 16,11"/><polyline points="1,20 1,13 8,13"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 11M1 13l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+          Refresh
+        </button>
+      </div>
+      <div id="messages-list"></div>
+    </div>
+
+    <!-- ════ CATEGORIES TAB ════ -->
+    <div id="tab-categories" hidden>
+      <div class="admin-header">
+        <h1 class="admin-title">Categories</h1>
+      </div>
+      <div id="cats-grid"
+           style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px">
+      </div>
+    </div>
+
+  </main>
+</div><!-- /admin-wrapper -->
+
+
+<!-- ══════════════════════════════════════════════
+     MODAL — Add / Edit Product
+     ══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">Add Product</h2>
+      <button class="modal-close" onclick="closeProductModal()" aria-label="Close">✕</button>
+    </div>
+    <input type="hidden" id="editId">
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Product Name *</label>
+        <input type="text" id="p-name" placeholder="e.g. Brown Sofa">
+      </div>
+      <div class="form-group">
+        <label>Category *</label>
+        <select id="p-category">
+          <option value="">Select…</option>
+          <option>Sofas</option><option>Armchairs</option><option>Chairs</option>
+          <option>Tables</option><option>Curtains</option><option>Pillows</option>
+          <option>Accessories</option>
+        </select>
+      </div>
+
+      <div class="form-group form-full">
+        <label>Description</label>
+        <textarea id="p-desc" placeholder="Describe the product…"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Price (₸) *</label>
+        <input type="number" id="p-price" placeholder="e.g. 299000" min="0">
+      </div>
+      <div class="form-group">
+        <label>Stock *</label>
+        <input type="number" id="p-stock" placeholder="e.g. 10" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Color</label>
+        <input type="text" id="p-color" placeholder="e.g. Brown, Green">
+      </div>
+      <div class="form-group">
+        <label>Material</label>
+        <input type="text" id="p-material" placeholder="e.g. Leather, Velvet">
+      </div>
+
+      <div class="form-group form-full">
+        <label>Image URL</label>
+        <input type="text" id="p-image" placeholder="https://…">
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="saveProduct()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Save Product
+      </button>
+      <button class="btn btn-ghost" onclick="closeProductModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     MODAL — Delete Confirm
+     ══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <h2 class="modal-title" style="color:#dc2626">Delete Product</h2>
+      <button class="modal-close" onclick="closeDeleteModal()">✕</button>
+    </div>
+    <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:22px">
+      <div class="delete-icon-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+          <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </div>
+      <div>
+        <p style="font-weight:600;margin:0 0 6px;font-size:.97rem">Are you sure?</p>
+        <p style="color:var(--gray);margin:0;font-size:.88rem;line-height:1.5">
+          You are about to permanently delete
+          <strong id="delete-name" style="color:var(--dark)"></strong>.
+          This cannot be undone.
+        </p>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" style="background:#dc2626;color:white;flex:1;justify-content:center"
+              onclick="confirmDelete()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        </svg>
+        Yes, Delete
+      </button>
+      <button class="btn btn-ghost" onclick="closeDeleteModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast-container"></div>
+<script src="../js/main.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════
+   ADMIN PANEL — FULL LOGIC
+   ═══════════════════════════════════════════════════ */
+
+let allProducts    = [];   // full list from API / sample
+let deleteTargetId = null;
+
+/* ─── Tab switching ─────────────────────────────── */
+function showTab(name) {
+  ['products','messages','categories'].forEach(t => {
+    document.getElementById('tab-' + t).hidden = (t !== name);
+  });
+  document.querySelectorAll('.sidebar-link').forEach((btn, i) => {
+    btn.classList.toggle('active', ['products','messages','categories'][i] === name);
+  });
+  if (name === 'messages')   loadMessages();
+  if (name === 'categories') renderCategories();
+}
+
+/* ─── Load products ─────────────────────────────── */
+async function loadAdminProducts() {
+  setTbody('<tr><td colspan="6" class="state-cell"><div class="spinner" style="margin:0 auto 10px"></div>Loading…</td></tr>');
+  allProducts = (await loadProducts()) || SAMPLE_PRODUCTS;
+  renderTable(allProducts);
+  updateStats(allProducts);
+}
+
+function updateStats(products) {
+  document.getElementById('stat-total').textContent      = products.length;
+  document.getElementById('stat-instock').textContent    = products.filter(p => p.stock > 0).length;
+  document.getElementById('stat-outofstock').textContent = products.filter(p => p.stock === 0).length;
+  document.getElementById('stat-cats').textContent       = new Set(products.map(p => p.category)).size;
+}
+
+/* ─── Filter ────────────────────────────────────── */
+function filterProducts() {
+  const q   = document.getElementById('adminSearch').value.trim().toLowerCase();
+  const cat = document.getElementById('adminCatFilter').value;
+  renderTable(allProducts.filter(p => {
+    const matchQ   = !q   || p.name.toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q);
+    const matchCat = !cat || p.category === cat;
+    return matchQ && matchCat;
+  }));
+}
+
+/* ─── Render table ──────────────────────────────── */
+function renderTable(products) {
+  if (!products.length) {
+    setTbody('<tr><td colspan="6" class="state-cell">No products found.</td></tr>');
+    return;
+  }
+
+  setTbody(products.map(p => {
+    const stockClass = p.stock > 5 ? 'stock-ok' : p.stock > 0 ? 'stock-low' : 'stock-none';
+    const safeName   = (p.name || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+    return `
+      <tr>
+        <td>
+          <img
+            src="${p.imageUrl || ''}"
+            alt="${safeName}"
+            onerror="this.style.opacity='0'"
+          >
+        </td>
+        <td>
+          <strong style="display:block;font-size:.92rem;margin-bottom:2px">${p.name}</strong>
+          ${p.color
+            ? `<span style="font-size:.74rem;color:var(--gray)">${p.color}${p.material ? ' · ' + p.material : ''}</span>`
+            : ''}
+        </td>
+        <td><span class="cat-tag">${p.category}</span></td>
+        <td style="font-family:var(--font-display);font-weight:600;color:var(--green)">
+          ${formatPrice(p.price)}
+        </td>
+        <td><span class="${stockClass}">${p.stock}</span></td>
+        <td>
+          <div class="tbl-actions">
+            <button
+              class="action-btn btn-edit"
+              title="Edit product"
+              onclick="openEditModal(${p.id})"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+            <button
+              class="action-btn btn-delete"
+              title="Delete product"
+              onclick="openDeleteModal(${p.id}, '${safeName}')"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+            </button>
+          </div>
+        </td>
+      </tr>`;
+  }).join(''));
+}
+
+function setTbody(html) {
+  document.getElementById('tbody').innerHTML = html;
+}
+
+/* ─── Add / Edit modal ──────────────────────────── */
+function openAddModal() {
+  fillModal(null);
+}
+
+function openEditModal(id) {
+  const p = allProducts.find(p => p.id === id);
+  if (p) fillModal(p);
+}
+
+function fillModal(p) {
+  document.getElementById('modal-title').textContent = p ? 'Edit Product' : 'Add Product';
+  document.getElementById('editId').value    = p ? p.id  : '';
+  document.getElementById('p-name').value   = p?.name        || '';
+  document.getElementById('p-category').value = p?.category  || '';
+  document.getElementById('p-desc').value   = p?.description || '';
+  document.getElementById('p-price').value  = p?.price       || '';
+  document.getElementById('p-stock').value  = p?.stock       ?? '';
+  document.getElementById('p-color').value  = p?.color       || '';
+  document.getElementById('p-material').value = p?.material  || '';
+  document.getElementById('p-image').value  = p?.imageUrl    || '';
+  document.getElementById('productModal').classList.add('open');
+  setTimeout(() => document.getElementById('p-name').focus(), 120);
+}
+
+function closeProductModal() {
+  document.getElementById('productModal').classList.remove('open');
+}
+
+async function saveProduct() {
+  const id       = document.getElementById('editId').value;
+  const name     = document.getElementById('p-name').value.trim();
+  const category = document.getElementById('p-category').value;
+  const price    = parseFloat(document.getElementById('p-price').value);
+  const stock    = parseInt(document.getElementById('p-stock').value, 10);
+
+  if (!name || !category || isNaN(price) || isNaN(stock)) {
+    Toast.show('Please fill in all required fields.', 'error');
+    return;
+  }
+
+  const payload = {
+    name, category,
+    description: document.getElementById('p-desc').value,
+    price, stock,
+    color:    document.getElementById('p-color').value,
+    material: document.getElementById('p-material').value,
+    imageUrl: document.getElementById('p-image').value,
+  };
+
+  let apiOk = false;
+  if (id) {
+    apiOk = !!(await API.put(`/products/${id}`, payload));
+  } else {
+    apiOk = !!(await API.post('/products', payload));
+  }
+
+  // Demo-mode local update (no backend needed)
+  if (id) {
+    const idx = allProducts.findIndex(p => p.id === parseInt(id, 10));
+    if (idx !== -1) allProducts[idx] = { ...allProducts[idx], ...payload };
+    Toast.show('Product updated ✓', 'success');
+  } else {
+    const newId = allProducts.length ? Math.max(...allProducts.map(p => p.id)) + 1 : 1;
+    allProducts.unshift({ id: newId, ...payload });
+    Toast.show('Product added ✓', 'success');
+  }
+
+  if (apiOk) await loadAdminProducts();
+  else { renderTable(allProducts); updateStats(allProducts); }
+
+  closeProductModal();
+}
+
+/* ─── Delete modal ──────────────────────────────── */
+function openDeleteModal(id, name) {
+  deleteTargetId = id;
+  document.getElementById('delete-name').textContent = name;
+  document.getElementById('deleteModal').classList.add('open');
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.remove('open');
+  deleteTargetId = null;
+}
+
+async function confirmDelete() {
+  if (!deleteTargetId) return;
+
+  await API.delete(`/products/${deleteTargetId}`);   // fire-and-forget (demo works without backend)
+
+  allProducts = allProducts.filter(p => p.id !== deleteTargetId);
+  renderTable(allProducts);
+  updateStats(allProducts);
+  Toast.show('Product deleted.', 'success');
+  closeDeleteModal();
+}
+
+/* ─── Messages ──────────────────────────────────── */
+async function loadMessages() {
+  const el = document.getElementById('messages-list');
+  el.innerHTML = '<div style="display:flex;justify-content:center;padding:60px"><div class="spinner"></div></div>';
+  const msgs = await API.get('/contact');
+  if (!msgs || !msgs.length) {
+    el.innerHTML = `
+      <div style="text-align:center;padding:70px 20px;color:var(--gray)">
+        <svg style="margin-bottom:14px;opacity:.35" width="40" height="40" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <p style="font-family:var(--font-display);font-size:1.4rem;color:var(--dark);margin-bottom:6px">No messages yet</p>
+        <p>Contact form submissions will appear here.</p>
+      </div>`;
+    return;
+  }
+  el.innerHTML = '';
+  msgs.forEach(m => {
+    const div = document.createElement('div');
+    div.style.cssText = 'background:var(--white);border-radius:12px;padding:22px 24px;margin-bottom:14px;border-left:3px solid var(--green)';
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+        <div>
+          <strong>${m.name}</strong>
+          <span style="color:var(--gray);font-size:.84rem;margin-left:8px">&lt;${m.email}&gt;</span>
+        </div>
+        <span style="font-size:.74rem;color:var(--gray)">
+          ${m.createdAt ? new Date(m.createdAt).toLocaleDateString('en-KZ') : 'Recent'}
+        </span>
+      </div>
+      <p style="color:var(--dark);line-height:1.7;margin-bottom:12px">${m.message}</p>
+      <a href="mailto:${m.email}" class="btn btn-outline" style="padding:7px 14px;font-size:.78rem">Reply via Email</a>`;
+    el.appendChild(div);
+  });
+}
+
+/* ─── Categories ────────────────────────────────── */
+function renderCategories() {
+  const list = [
+    { name:'Sofas',       icon:'🛋️' },
+    { name:'Armchairs',   icon:'🪑' },
+    { name:'Chairs',      icon:'💺' },
+    { name:'Tables',      icon:'🪞' },
+    { name:'Curtains',    icon:'🪟' },
+    { name:'Pillows',     icon:'🛏️' },
+    { name:'Accessories', icon:'🏮' },
+  ].map(c => ({ ...c, count: allProducts.filter(p => p.category === c.name).length }));
+
+  document.getElementById('cats-grid').innerHTML = list.map(c => `
+    <div style="background:var(--white);padding:22px;border-radius:12px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.06)">
+      <div style="font-size:2rem;margin-bottom:10px">${c.icon}</div>
+      <h3 style="font-family:var(--font-display);font-size:1.15rem;margin-bottom:6px">${c.name}</h3>
+      <p style="color:var(--gray);font-size:.83rem;margin-bottom:12px">${c.count} product${c.count !== 1 ? 's' : ''}</p>
+      <button class="btn btn-outline" style="padding:6px 13px;font-size:.75rem"
+              onclick="document.getElementById('adminCatFilter').value='${c.name}';showTab('products');filterProducts()">
+        View All
+      </button>
+    </div>`).join('');
+}
+
+/* ─── Close modals on backdrop / ESC ────────────── */
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) { o.classList.remove('open'); deleteTargetId = null; }
+  });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(o => o.classList.remove('open'));
+    deleteTargetId = null;
+  }
+});
+
+
+/* ─── Admin Gate ────────────────────────────────── */
+const ADMIN_EMAIL = 'admin@senim.kz';
+const ADMIN_PASS  = 'admin';
+const GATE_KEY    = 'senim_admin_authed';
+
+function adminLogin() {
+  const email = document.getElementById('gateEmail').value.trim();
+  const pass  = document.getElementById('gatePassword').value;
+  const errEl = document.getElementById('gateError');
+  const btn   = document.getElementById('gateBtn');
+
+  errEl.classList.remove('show');
+
+  if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+    sessionStorage.setItem(GATE_KEY, '1');
+    document.getElementById('adminGate').classList.add('hidden');
+  } else {
+    errEl.classList.add('show');
+    btn.textContent = 'Enter Admin Panel';
+    btn.disabled = false;
+    document.getElementById('gatePassword').value = '';
+    document.getElementById('gatePassword').focus();
+  }
+}
+
+// Check on load — if already authed this session, skip gate
+if (sessionStorage.getItem(GATE_KEY) === '1') {
+  document.getElementById('adminGate').classList.add('hidden');
+}
+
+// Allow Enter key in gate inputs
+['gateEmail','gatePassword'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') adminLogin();
+  });
+});
+
+
+/* ─── Boot ──────────────────────────────────────── */
+loadAdminProducts();
+</script>
+</body>
+</html>

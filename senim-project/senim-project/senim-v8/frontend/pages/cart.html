@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart – Senim Furniture</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* ── Checkout Modal ───────────────────────────── */
+    .checkout-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.5);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9000; padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s;
+    }
+    .checkout-overlay.open { opacity: 1; pointer-events: all; }
+    .checkout-modal {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 36px 32px;
+      width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 12px 60px rgba(0,0,0,.18);
+      transform: translateY(20px);
+      transition: transform .25s;
+    }
+    .checkout-overlay.open .checkout-modal { transform: translateY(0); }
+    .checkout-modal h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem; color: var(--dark);
+      margin-bottom: 4px;
+    }
+    .checkout-modal .modal-sub {
+      font-size: .83rem; color: var(--gray); margin-bottom: 28px;
+    }
+    .checkout-section-title {
+      font-size: .75rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--green);
+      margin: 22px 0 12px;
+    }
+    .co-field { margin-bottom: 16px; }
+    .co-field label {
+      display: block; font-size: .8rem; font-weight: 600;
+      color: var(--dark); margin-bottom: 6px;
+    }
+    .co-field input {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid var(--beige-dark);
+      border-radius: var(--radius);
+      font-family: var(--font-body); font-size: .9rem;
+      background: var(--beige); box-sizing: border-box;
+      transition: border-color .2s;
+    }
+    .co-field input:focus {
+      outline: none; border-color: var(--green); background: white;
+    }
+    .co-field input.error { border-color: #dc2626; }
+    .co-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .co-error-msg {
+      background: #fee2e2; color: #dc2626;
+      padding: 10px 14px; border-radius: var(--radius);
+      font-size: .83rem; margin-bottom: 14px; display: none;
+    }
+    .co-error-msg.show { display: block; }
+    .co-summary {
+      background: var(--beige); border-radius: var(--radius);
+      padding: 16px 18px; margin: 20px 0;
+      font-size: .88rem;
+    }
+    .co-summary-row {
+      display: flex; justify-content: space-between;
+      padding: 4px 0;
+    }
+    .co-summary-row.total {
+      font-weight: 700; color: var(--dark);
+      border-top: 1px solid var(--beige-dark);
+      margin-top: 8px; padding-top: 10px;
+    }
+    .co-actions {
+      display: flex; gap: 10px; margin-top: 20px;
+    }
+    .co-actions .btn { flex: 1; justify-content: center; }
+    .card-hint {
+      font-size: .75rem; color: var(--gray); margin-top: 4px;
+    }
+    .date-hint {
+      font-size: .75rem; color: var(--gray); margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">Senim</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="products.html">Furniture</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" title="Cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      <span class="cart-count">0</span>
+    </button>
+    <button class="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-banner">
+  <p class="page-banner-label">Your Selection</p>
+  <h1 class="page-banner-title">Shopping Cart</h1>
+</div>
+
+<section style="padding:60px 5%">
+  <div class="cart-layout" id="cart-layout"></div>
+</section>
+
+<footer class="footer">
+  <div class="footer-bottom" style="border:none;padding:30px 5%">
+    <span>© 2025 Senim Furniture</span>
+    <a href="../index.html" class="nav-logo" style="font-size:1.2rem">Senim</a>
+    <a href="contact.html" style="color:rgba(255,255,255,.5)">Contact Us</a>
+  </div>
+</footer>
+
+<!-- ══ CHECKOUT MODAL ══ -->
+<div class="checkout-overlay" id="checkoutOverlay">
+  <div class="checkout-modal">
+    <h2>Checkout</h2>
+    <p class="modal-sub">Fill in your details to place the order</p>
+
+    <div class="co-error-msg" id="coError"></div>
+
+    <div class="checkout-section-title">💳 Payment</div>
+    <div class="co-field">
+      <label>Card Number</label>
+      <input type="text" id="coCard" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)">
+      <p class="card-hint">16-digit card number</p>
+    </div>
+
+    <div class="checkout-section-title">📦 Delivery Details</div>
+    <div class="co-field">
+      <label>Email</label>
+      <input type="email" id="coEmail" placeholder="your@email.com">
+    </div>
+    <div class="co-field">
+      <label>Phone Number</label>
+      <input type="tel" id="coPhone" placeholder="+7 (___) ___-__-__">
+    </div>
+    <div class="co-field">
+      <label>Delivery Address</label>
+      <input type="text" id="coAddress" placeholder="Street, City, Postcode">
+    </div>
+    <div class="co-field">
+      <label>Delivery Date</label>
+      <input type="date" id="coDate">
+      <p class="date-hint" id="dateHint">Earliest available: <span id="minDateLabel"></span></p>
+    </div>
+
+    <div class="co-summary" id="coSummary"></div>
+
+    <div class="co-actions">
+      <button class="btn btn-ghost" onclick="closeCheckout()">Cancel</button>
+      <button class="btn btn-primary" id="coSubmitBtn" onclick="submitOrder()">Place Order</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="../js/main.js"></script>
+<script>
+  /* ── Cart render ──────────────────────────────── */
+  function renderCart() {
+    const items  = Cart.getItems();
+    const layout = document.getElementById('cart-layout');
+
+    if (items.length === 0) {
+      layout.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1;min-height:40vh;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <h3 style="margin-top:20px">Your cart is empty</h3>
+          <p style="margin:8px 0 24px">Looks like you haven't added anything yet.</p>
+          <a href="products.html" class="btn btn-primary">Start Shopping</a>
+        </div>`;
+      return;
+    }
+
+    const subtotal = Cart.getTotal();
+    const delivery = subtotal >= 50000 ? 0 : 5000;
+    const total    = subtotal + delivery;
+
+    layout.innerHTML = `
+      <div class="cart-items" id="cart-items-list"></div>
+      <div class="cart-summary">
+        <h2 class="cart-summary-title">Order Summary</h2>
+        <div class="summary-row">
+          <span>Subtotal (${Cart.getCount()} items)</span>
+          <span>${formatPrice(subtotal)}</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span>${delivery === 0 ? '<span style="color:var(--green)">Free</span>' : formatPrice(delivery)}</span>
+        </div>
+        ${delivery > 0 ? `<div style="font-size:.78rem;color:var(--gray);margin:-6px 0 12px">Add ${formatPrice(50000 - subtotal)} more for free delivery</div>` : ''}
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="summary-price">${formatPrice(total)}</span>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:24px" onclick="openCheckout()">
+          Proceed to Checkout
+        </button>
+        <a href="products.html" class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:10px">
+          Continue Shopping
+        </a>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--beige-dark)">
+          <p style="font-size:.75rem;color:var(--gray);text-align:center">
+            🔒 Secure checkout · Free returns · 2-year warranty
+          </p>
+        </div>
+      </div>`;
+
+    const list = document.getElementById('cart-items-list');
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'cart-item';
+      el.innerHTML = `
+        <img class="cart-item-image" src="${item.imageUrl || '../images/placeholder.jpg'}" alt="${item.name}"
+             onerror="this.src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=200'">
+        <div class="cart-item-info">
+          <div class="cart-item-category">${item.category || ''}</div>
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">${formatPrice(item.price)}</div>
+        </div>
+        <div class="quantity-control">
+          <button class="qty-btn" onclick="changeQty(${item.id}, ${(item.quantity||1) - 1})">−</button>
+          <span class="qty-value">${item.quantity || 1}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id}, ${(item.quantity||1) + 1})">+</button>
+        </div>
+        <div style="font-family:var(--font-display);font-weight:600;color:var(--green);min-width:100px;text-align:right">
+          ${formatPrice(item.price * (item.quantity || 1))}
+        </div>
+        <button class="remove-btn" onclick="removeItem(${item.id})" title="Remove">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,6 5,6 21,6"/><path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2v2"/></svg>
+        </button>`;
+      list.appendChild(el);
+    });
+  }
+
+  function changeQty(id, qty) {
+    if (qty <= 0) Cart.removeItem(id); else Cart.updateQuantity(id, qty);
+    renderCart();
+  }
+
+  function removeItem(id) {
+    Cart.removeItem(id);
+    renderCart();
+    Toast.show('Item removed from cart', 'info');
+  }
+
+  /* ── Checkout modal ───────────────────────────── */
+  function openCheckout() {
+    if (!Auth.isLoggedIn()) {
+      Toast.show('Please sign in to checkout', 'info', 3000);
+      setTimeout(() => window.location.href = 'auth.html', 1200);
+      return;
+    }
+
+    // Set minimum date (today + 3 days)
+    const minDate = new Date();
+    minDate.setDate(minDate.getDate() + 3);
+    const minStr = minDate.toISOString().split('T')[0];
+    document.getElementById('coDate').min = minStr;
+    document.getElementById('coDate').value = minStr;
+    document.getElementById('minDateLabel').textContent =
+      minDate.toLocaleDateString('en-KZ', { weekday:'long', month:'long', day:'numeric' });
+
+    // Pre-fill email if logged in
+    const user = Auth.getUser();
+    if (user && user.email) document.getElementById('coEmail').value = user.email;
+
+    // Fill summary
+    const subtotal = Cart.getTotal();
+    const delivery = subtotal >= 50000 ? 0 : 5000;
+    const total    = subtotal + delivery;
+    document.getElementById('coSummary').innerHTML = `
+      <div class="co-summary-row"><span>Subtotal</span><span>${formatPrice(subtotal)}</span></div>
+      <div class="co-summary-row"><span>Delivery</span><span>${delivery === 0 ? 'Free' : formatPrice(delivery)}</span></div>
+      <div class="co-summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>`;
+
+    document.getElementById('coError').classList.remove('show');
+    document.getElementById('checkoutOverlay').classList.add('open');
+  }
+
+  function closeCheckout() {
+    document.getElementById('checkoutOverlay').classList.remove('open');
+  }
+
+  // Close on backdrop click
+  document.getElementById('checkoutOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeCheckout();
+  });
+
+  /* ── Card number formatter ────────────────────── */
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g, '').substring(0, 16);
+    input.value = v.replace(/(.{4})/g, '$1 ').trim();
+  }
+
+  /* ── Submit order ─────────────────────────────── */
+  function submitOrder() {
+    const card    = document.getElementById('coCard').value.replace(/\s/g, '');
+    const email   = document.getElementById('coEmail').value.trim();
+    const phone   = document.getElementById('coPhone').value.trim();
+    const address = document.getElementById('coAddress').value.trim();
+    const dateVal = document.getElementById('coDate').value;
+    const errEl   = document.getElementById('coError');
+
+    errEl.classList.remove('show');
+
+    // Validate
+    if (card.length !== 16 || !/^\d+$/.test(card)) {
+      showCoError('Please enter a valid 16-digit card number.'); return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showCoError('Please enter a valid email address.'); return;
+    }
+    if (!phone || phone.length < 7) {
+      showCoError('Please enter a valid phone number.'); return;
+    }
+    if (!address) {
+      showCoError('Please enter your delivery address.'); return;
+    }
+    if (!dateVal) {
+      showCoError('Please select a delivery date.'); return;
+    }
+
+    // Check minimum 3 days
+    const minDate = new Date(); minDate.setDate(minDate.getDate() + 3);
+    minDate.setHours(0,0,0,0);
+    const chosen = new Date(dateVal + 'T00:00:00');
+    if (chosen < minDate) {
+      showCoError('Delivery date must be at least 3 days from today.'); return;
+    }
+
+    // Build order object and save to localStorage
+    const items    = Cart.getItems();
+    const subtotal = Cart.getTotal();
+    const delivery = subtotal >= 50000 ? 0 : 5000;
+    const order = {
+      id:           'ORD-' + Date.now(),
+      placedAt:     new Date().toISOString(),
+      deliveryDate: dateVal,
+      email, phone, address,
+      cardLast4:    card.slice(-4),
+      items:        items.map(i => ({ name: i.name, quantity: i.quantity || 1, price: i.price })),
+      subtotal, delivery,
+      total:        subtotal + delivery,
+      status:       'In Delivery'
+    };
+
+    const user = Auth.getUser();
+    const ordersKey = user ? `senim_orders_${user.id}` : 'senim_orders_guest';
+    const orders = JSON.parse(localStorage.getItem(ordersKey) || '[]');
+    orders.unshift(order);
+    localStorage.setItem(ordersKey, JSON.stringify(orders));
+
+    Cart.clear();
+    closeCheckout();
+    Toast.show('Order placed! 🎉 Delivery on ' + new Date(dateVal + 'T00:00:00').toLocaleDateString('en-KZ', { month:'long', day:'numeric' }), 'success', 5000);
+    setTimeout(() => renderCart(), 300);
+  }
+
+  function showCoError(msg) {
+    const el = document.getElementById('coError');
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  window.addEventListener('cartUpdated', renderCart);
+  renderCart();
+</script>
+</body>
+</html>

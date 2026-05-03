@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Senim Furniture – Design Made For You</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">Senim</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="pages/products.html">Furniture</a></li>
+    <li><a href="pages/about.html">About</a></li>
+    <li><a href="pages/contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+<!--    <a href="pages/auth.html" class="btn btn-outline" id="nav-auth-btn" style="padding:7px 16px;font-size:.8rem">Sign In</a>-->
+<!--    <button class="nav-search" onclick="document.getElementById('search-section').scrollIntoView({behavior:'smooth'})" title="Search">-->
+<!--&lt;!&ndash;      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>&ndash;&gt;-->
+<!--    </button>-->
+    <button class="cart-btn" onclick="window.location.href='pages/cart.html'" title="Cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      <span class="cart-count">0</span>
+    </button>
+    <button class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content" data-animate>
+    <p class="hero-subtitle">New Collection 2025</p>
+    <h1 class="hero-title">Furniture<br><em>Design</em><br>Made For<br>You</h1>
+    <p class="hero-description">Discover handcrafted furniture pieces that transform your living space into a sanctuary of comfort and style.</p>
+    <div class="hero-buttons">
+      <a href="pages/products.html" class="btn btn-primary">
+        Shop Now
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <a href="pages/about.html" class="btn btn-outline">Our Story</a>
+    </div>
+  </div>
+  <div class="hero-image-area">
+    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=700&q=80" alt="Featured Sofa" id="hero-sofa">
+    <div class="hero-badge">
+      <div class="hero-badge-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></svg>
+      </div>
+      <div class="hero-badge-text">
+        <strong>500+</strong>
+        <span>Products Available</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORIES STRIP -->
+<div class="categories-strip" id="search-section">
+  <p class="section-label" style="text-align:center;margin-bottom:24px">Browse By Category</p>
+  <div class="categories-inner">
+    <a href="pages/products.html?category=Sofas" class="cat-item">
+      <div class="cat-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 9V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v2"/><path d="M2 11v5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H6v-2a2 2 0 0 0-4 0z"/><path d="M4 18v2"/><path d="M20 18v2"/></svg>
+      </div>
+      <span class="cat-name">Sofas</span>
+      <span class="cat-count">Comfortable & cozy</span>
+    </a>
+    <a href="pages/products.html?category=Armchairs" class="cat-item">
+      <div class="cat-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="8" rx="2"/><path d="M4 14H2v-2a2 2 0 0 1 4 0v2"/><path d="M20 14h2v-2a2 2 0 0 0-4 0v2"/><path d="M6 18v2"/><path d="M18 18v2"/><path d="M8 10V6a2 2 0 0 1 4 0v1"/><path d="M12 7V6a2 2 0 0 1 4 0v4"/></svg>
+      </div>
+      <span class="cat-name">Armchairs</span>
+      <span class="cat-count">For seating</span>
+    </a>
+    <a href="pages/products.html?category=Chairs" class="cat-item">
+      <div class="cat-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 19v-3"/><path d="M10 19v-3"/><path d="M14 19v-3"/><path d="M18 19v-3"/><path d="M8 11V9a4 4 0 0 1 8 0v2"/><path d="M4 11h16v3a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-3z"/></svg>
+      </div>
+      <span class="cat-name">Chairs</span>
+      <span class="cat-count">Office & dining</span>
+    </a>
+    <a href="pages/products.html?category=Tables" class="cat-item">
+      <div class="cat-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18"/><path d="M3 6v12"/><path d="M21 6v12"/><path d="M3 12h18"/></svg>
+      </div>
+      <span class="cat-name">Tables</span>
+      <span class="cat-count">Coffee & dining</span>
+    </a>
+    <a href="pages/products.html?category=Curtains" class="cat-item">
+      <div class="cat-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h18"/><path d="M3 3v18"/><path d="M21 3v18"/><path d="M12 3 8 21"/><path d="M12 3l4 18"/></svg>
+      </div>
+      <span class="cat-name">Curtains</span>
+      <span class="cat-count">Window decor</span>
+    </a>
+    <a href="pages/products.html?category=Pillows" class="cat-item">
+      <div class="cat-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="10" rx="5"/></svg>
+      </div>
+      <span class="cat-name">Pillows</span>
+      <span class="cat-count">Comfort & style</span>
+    </a>
+  </div>
+</div>
+
+<!-- OUR PRODUCT (Featured) -->
+<section class="featured-section">
+  <div style="text-align:center;margin-bottom:48px">
+    <p class="section-label">Handpicked For You</p>
+    <h2 class="section-title">Our <span>Product</span></h2>
+  </div>
+  <div class="featured-layout">
+    <div class="featured-card">
+      <div class="featured-card-content">
+        <div class="featured-card-label">Best Seller</div>
+        <h3 class="featured-card-title">Brown Leather Sofa</h3>
+        <p class="featured-card-desc">Full-grain leather with hand-stitched seams. A piece that gets better with age — crafted for generations.</p>
+        <div class="featured-card-price">699 000 ₸</div>
+        <a href="pages/products.html?category=Sofas" class="btn" style="background:white;color:var(--green);font-size:.8rem">
+          Read More →
+        </a>
+      </div>
+      <div class="featured-card-image">
+        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&q=80" alt="Brown Sofa">
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:24px">
+      <div class="featured-card" style="background:var(--beige-dark);color:var(--dark);min-height:auto">
+        <div class="featured-card-content">
+          <div class="featured-card-label" style="color:var(--warm-tan)">New Arrival</div>
+          <h3 class="featured-card-title" style="color:var(--dark);font-size:1.4rem">Green Velvet Armchair</h3>
+          <div class="featured-card-price" style="font-size:1.2rem">249 000 ₸</div>
+          <a href="pages/products.html?category=Armchairs" class="btn btn-outline" style="font-size:.78rem">Read More →</a>
+        </div>
+        <div class="featured-card-image">
+          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&q=80" alt="Green Armchair" style="max-height:160px">
+        </div>
+      </div>
+      <div class="featured-card" style="background:var(--warm-tan);min-height:auto">
+        <div class="featured-card-content">
+          <div class="featured-card-label" style="color:rgba(255,255,255,0.7)">Popular</div>
+          <h3 class="featured-card-title" style="font-size:1.4rem">Red Curtain Set</h3>
+          <div class="featured-card-price" style="font-size:1.2rem">249 000 ₸</div>
+          <a href="pages/products.html?category=Curtains" class="btn" style="background:white;color:var(--warm-brown);font-size:.78rem">Read More →</a>
+        </div>
+        <div class="featured-card-image">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&q=80" alt="Red Curtains" style="max-height:160px">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT CAROUSEL -->
+<section style="background:var(--white)">
+  <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:16px">
+    <div>
+      <p class="section-label">Browse Collection</p>
+      <h2 class="section-title" style="margin-bottom:0">Latest Products</h2>
+    </div>
+    <a href="pages/products.html" class="btn btn-outline">View All Products</a>
+  </div>
+  <div class="products-grid" id="home-products">
+    <div class="loading-spinner"><div class="spinner"></div></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div>
+    <div class="stat-number">500+</div>
+    <div class="stat-label">Products</div>
+  </div>
+  <div>
+    <div class="stat-number">10K+</div>
+    <div class="stat-label">Happy Customers</div>
+  </div>
+  <div>
+    <div class="stat-number">12</div>
+    <div class="stat-label">Years Experience</div>
+  </div>
+  <div>
+    <div class="stat-number">50+</div>
+    <div class="stat-label">Cities Delivered</div>
+  </div>
+</div>
+
+<!-- OPPORTUNITIES / ABOUT SECTION -->
+<section class="opportunities-section">
+  <div>
+    <p class="section-label">Why Choose Us</p>
+    <h2 class="section-title">Our <span>Opportunities</span></h2>
+    <p class="section-desc">
+      We believe great furniture should be accessible to everyone. Our team sources the finest materials, handcrafting every piece with care so your home becomes a reflection of your personality.
+    </p>
+    <p class="section-desc">
+      From concept to delivery, we ensure a seamless experience. Our design consultants are available to help you create the perfect room — whether you're furnishing a studio or an entire home.
+    </p>
+    <a href="pages/about.html" class="btn btn-primary" style="margin-top:12px">Learn More</a>
+  </div>
+  <div class="opportunities-images">
+    <div class="opp-image" style="margin-top:0">
+      <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&q=80" alt="Living room" loading="lazy">
+    </div>
+    <div class="opp-image" style="margin-top:32px">
+      <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=400&q=80" alt="Armchair detail" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- FULL WIDTH BANNER -->
+<div style="height:400px;overflow:hidden;position:relative">
+  <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1400&q=80" alt="Interior" style="width:100%;height:100%;object-fit:cover">
+  <div style="position:absolute;inset:0;background:rgba(45,80,22,0.7);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px">
+    <p style="color:rgba(255,255,255,0.7);font-size:.78rem;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px">Limited Time Offer</p>
+    <h2 style="font-family:var(--font-display);font-size:clamp(2rem,5vw,3.5rem);color:white;font-weight:300;margin-bottom:24px">Up to 30% Off<br>Selected Items</h2>
+    <a href="pages/products.html" class="btn" style="background:var(--warm-tan);color:white">Shop the Sale</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="index.html" class="nav-logo" style="display:block;margin-bottom:12px">Senim</a>
+      <p class="footer-desc">Crafting beautiful furniture for modern Kazakh homes. Quality materials, timeless design, delivered to your door.</p>
+      <div class="social-links">
+        <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+        <a href="#" class="social-link" aria-label="Facebook">f</a>
+        <a href="#" class="social-link" aria-label="Instagram">◎</a>
+        <a href="#" class="social-link" aria-label="TikTok">♪</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Furniture</h5>
+      <div class="footer-links">
+        <a href="pages/products.html?category=Sofas">Sofas</a>
+        <a href="pages/products.html?category=Armchairs">Armchairs</a>
+        <a href="pages/products.html?category=Chairs">Chairs</a>
+        <a href="pages/products.html?category=Tables">Tables</a>
+        <a href="pages/products.html?category=Curtains">Curtains</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <div class="footer-links">
+        <a href="pages/about.html">About Us</a>
+        <a href="pages/contact.html">Contact</a>
+        <a href="pages/admin.html">Admin</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Contact</h5>
+      <div class="footer-links">
+        <a href="mailto:hello@senim.kz">hello@senim.kz</a>
+        <a href="tel:+77012345678">+7 701 234 56 78</a>
+        <span style="color:rgba(255,255,255,.35);font-size:.85rem">Almaty, Kazakhstan</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Senim Furniture. All rights reserved.</span>
+    <div style="display:flex;gap:20px">
+      <a href="#">Privacy Policy</a>
+      <a href="pages/admin.html">Admin Panel</a>
+      <a href="#">Careers</a>
+      <a href="pages/contact.html">Contact Us</a>
+    </div>
+  </div>
+</footer>
+
+<div class="toast-container"></div>
+
+<script src="js/main.js"></script>
+<script src="js/chat.js"></script>
+<script>
+  // Update nav auth button based on login state
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('nav-auth-btn');
+    if (btn && Auth.isLoggedIn()) {
+      const user = Auth.getUser();
+      btn.textContent = 'Sign Out';
+      btn.href = '#';
+      btn.onclick = (e) => { e.preventDefault(); Auth.logout(); };
+    }
+  });
+</script>
+<script>
+  // Load 8 products for home page
+  (async () => {
+    const container = document.getElementById('home-products');
+    const products = await loadProducts();
+    container.innerHTML = '';
+    products.slice(0, 8).forEach(p => container.appendChild(createProductCard(p)));
+  })();
+
+  // Animate hero on load
+  window.addEventListener('load', () => {
+    document.querySelector('.hero-content')?.classList.add('visible');
+  });
+</script>
+</body>
+</html>

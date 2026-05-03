@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In / Register – Senim Furniture</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 20px 60px;
+      background: var(--beige);
+    }
+    .auth-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 4px 32px rgba(0,0,0,.08);
+    }
+    .auth-logo {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      color: var(--green);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .auth-subtitle {
+      text-align: center;
+      color: var(--gray);
+      font-size: .88rem;
+      margin-bottom: 36px;
+    }
+    .auth-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--beige-dark);
+      margin-bottom: 28px;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      background: none;
+      border: none;
+      font-family: var(--font-body);
+      font-size: .92rem;
+      font-weight: 500;
+      color: var(--gray);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all .2s;
+    }
+    .auth-tab.active {
+      color: var(--green);
+      border-bottom-color: var(--green);
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-group label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--beige-dark);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: .9rem;
+      background: var(--beige);
+      transition: border-color .2s;
+      box-sizing: border-box;
+    }
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--green);
+      background: white;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .auth-btn {
+      width: 100%;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .auth-error {
+      background: #fee2e2;
+      color: #e53e3e;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-size: .85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .auth-error.show { display: block; }
+    .user-info-bar {
+      background: var(--green);
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: .85rem;
+      display: none;
+    }
+    .user-info-bar.show { display: block; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">Senim</a>
+  <ul class="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="products.html">Furniture</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" onclick="window.location.href='cart.html'" title="Cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      <span class="cart-count">0</span>
+    </button>
+  </div>
+</nav>
+
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">Senim</div>
+    <p class="auth-subtitle">Your premium furniture destination</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login')" id="tab-login">Sign In</button>
+      <button class="auth-tab" onclick="switchTab('register')" id="tab-register">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="form-login">
+      <div class="auth-error" id="login-error"></div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <button class="btn btn-primary auth-btn" onclick="handleLogin()" id="login-btn">
+        Sign In
+      </button>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="form-register" style="display:none">
+      <div class="auth-error" id="register-error"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="reg-first" placeholder="First name" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="reg-last" placeholder="Last name" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="reg-email" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Password <span style="color:var(--gray);font-weight:400">(min 8 chars)</span></label>
+        <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="form-group">
+        <label>Phone <span style="color:var(--gray);font-weight:400">(optional)</span></label>
+        <input type="tel" id="reg-phone" placeholder="+7 (___) ___-__-__" autocomplete="tel">
+      </div>
+      <button class="btn btn-primary auth-btn" onclick="handleRegister()" id="register-btn">
+        Create Account
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container"></div>
+<script src="../js/main.js"></script>
+<script>
+  // Redirect if already logged in
+  if (Auth.isLoggedIn()) {
+    window.location.href = '../index.html';
+  }
+
+  function switchTab(tab) {
+    document.getElementById('form-login').style.display    = tab === 'login'    ? '' : 'none';
+    document.getElementById('form-register').style.display = tab === 'register' ? '' : 'none';
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  }
+
+  function showError(elId, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function clearError(elId) {
+    const el = document.getElementById(elId);
+    el.textContent = '';
+    el.classList.remove('show');
+  }
+
+  async function handleLogin() {
+    clearError('login-error');
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+
+    if (!email || !password) {
+      showError('login-error', 'Please fill in all fields.');
+      return;
+    }
+
+    const btn = document.getElementById('login-btn');
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+
+    const result = await Auth.login(email, password);
+
+    btn.textContent = 'Sign In';
+    btn.disabled = false;
+
+    if (result.success) {
+      Toast.show(`Welcome back, ${result.user.firstName}!`, 'success');
+      setTimeout(() => window.location.href = '../index.html', 800);
+    } else {
+      showError('login-error', result.message || 'Invalid email or password.');
+    }
+  }
+
+  async function handleRegister() {
+    clearError('register-error');
+    const firstName = document.getElementById('reg-first').value.trim();
+    const lastName  = document.getElementById('reg-last').value.trim();
+    const email     = document.getElementById('reg-email').value.trim();
+    const password  = document.getElementById('reg-password').value;
+    const phone     = document.getElementById('reg-phone').value.trim();
+
+    if (!firstName || !lastName || !email || !password) {
+      showError('register-error', 'Please fill in all required fields.');
+      return;
+    }
+    if (password.length < 8) {
+      showError('register-error', 'Password must be at least 8 characters.');
+      return;
+    }
+
+    const btn = document.getElementById('register-btn');
+    btn.textContent = 'Creating account…';
+    btn.disabled = true;
+
+    const result = await Auth.register({ firstName, lastName, email, password, phone });
+
+    btn.textContent = 'Create Account';
+    btn.disabled = false;
+
+    if (result.success) {
+      Toast.show(`Welcome to Senim, ${result.user.firstName}!`, 'success');
+      setTimeout(() => window.location.href = '../index.html', 800);
+    } else {
+      showError('register-error', result.message || 'Registration failed. Please try again.');
+    }
+  }
+
+  // Allow Enter key on inputs
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const loginVisible = document.getElementById('form-login').style.display !== 'none';
+      if (loginVisible) handleLogin();
+      else handleRegister();
+    }
+  });
+</script>
+</body>
+</html>
